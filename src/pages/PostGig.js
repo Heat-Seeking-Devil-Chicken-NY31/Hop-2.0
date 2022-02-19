@@ -1,7 +1,87 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import signInWithGoogle from "../services/firebase";
+import ReactDOM from "react-dom";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 function PostGig() {
-  return <div>PostGig</div>;
+  const [inputs, setInputs] = useState({});
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInputs((values) => ({ ...values, [name]: value }));
+  };
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    // TODO post gig in DB
+    await navigate("/MyGigs");
+  };
+
+  return (
+    <>
+      <Navbar />
+      <form onSubmit={handleSubmit}>
+        <label>
+          Title:
+          <input
+            type="text"
+            name="title"
+            value={inputs.title || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          City:
+          <input
+            type="text"
+            name="city"
+            value={inputs.city || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Rate:
+          <input
+            type="text"
+            name="hourlyRate"
+            value={inputs.hourlyRate || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Description:
+          <input
+            type="text"
+            name="description"
+            value={inputs.description || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Schedule:
+          <input
+            type="text"
+            name="schedule"
+            value={inputs.schedule || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Start Date:
+          <input
+            type="date"
+            name="startDate"
+            value={inputs.startDate || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <input type="submit" />
+      </form>
+    </>
+  );
 }
 
 export default PostGig;

@@ -5,18 +5,20 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import PostGig from "./pages/PostGig";
 import StaffGig from "./pages/StaffGig";
-import GigDetails from "./pages/GigDetails";
 import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
+import MyGigs from "./pages/MyGigs";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Navbar />
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="Home" element={<Home />} />
         <Route path="PostGig" element={<PostGig />} />
         <Route path="StaffGig" element={<StaffGig />} />
-        <Route path="GigDetails" element={<GigDetails />} />
+        <Route path="MyGigs" element={<MyGigs />} />
+        <Route path="Login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
