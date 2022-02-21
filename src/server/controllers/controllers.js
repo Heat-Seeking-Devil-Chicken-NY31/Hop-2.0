@@ -11,13 +11,13 @@ const pool = new Pool({
 
 const controller = {};
 
-controller.getAll = (req, res, next) => {
+controller.getUsers = (req, res, next) => {
   const sqlQuery = 'SELECT * from users';
-  
+  console.log(req)
   pool.query(sqlQuery)
     .then(payload => {
       res.locals = payload.rows;
-      console.log('res.locals is now:', res.locals)
+      // console.log('res.locals is now:', res.locals)
       next();
     }).catch(err=>{
       return next({
@@ -51,8 +51,10 @@ controller.authLogin = (req, res, next) => {
 
   pool.query(sqlQuery, (error, result) => {
     if (error) {
-      // throw error
-      console.log(error)
+      return next({
+        log: 'Error!',
+        message: 'Error in SQL Query for authLogin' + error,
+      });
     }
 
     if (result.rows.length > 0) {
@@ -60,7 +62,10 @@ controller.authLogin = (req, res, next) => {
       // if the entry does not exist in the table, result.rows.length is an empty array
       console.log(result.rows);
     } else {
-      console.log("invalid combination")
+      return next({
+        log: 'Error!',
+        message: 'Invalid User/Password combination',
+      });
     }
 
     return next()
@@ -75,14 +80,14 @@ controller.getAllGigs = (req, res, next) => {
 
   pool.query(sqlQuery)
   .then(payload => {
-    console.log ('The following gigs were retrieved' + payload);
+    console.log ('The following gigs were retrieved' + payload.rows);
     res.locals = payload.rows;
     return next();
   })
   .catch (err => {
     return next({
-      log:'Error!',
-      message:'Retrieving gigs failed'
+      log: 'Error!',
+      message: 'Retrieving gigs failed'
     });
   });
 };
@@ -95,14 +100,14 @@ controller.getGigsByCity = (req, res, next) => {
 
   pool.query(sqlQuery)
   .then(payload => {
-    console.log ('The following gigs were retrieved' + payload);
+    console.log ('The following gigs were retrieved' + payload.rows);
     res.locals = payload.rows;
     return next();
   })
   .catch (err => {
     return next({
       log:'Error!',
-      message:'Retrieving gigs failed'
+      message: 'Retrieving gigs failed'
     });
   });
 };
@@ -110,20 +115,20 @@ controller.getGigsByCity = (req, res, next) => {
 // Create a new gig
 controller.createGig = (req, res, next) => {
 // we have t odestructure the req.body and make sure our labels match the keys on the req.body
-const { _id, title, city, hourly_rate, description, schedule, startDate, user_id_created_by, user_id__assigned_to } = req.body;
-const sqlQuery = `INSERT INTO Gigs Values ('${_id}', '${title}', '${city}', '${hourly_rate}', '${description}','${schedule}', '${startDate}', '${user_id_created_by}' , '${user_id__assigned_to}' )`
+const { title, city, hourly_rate, description, schedule, startDate } = req.body;
+const sqlQuery = `INSERT INTO Gigs (title, city, hourly_rate, description, schedule, start_date) VALUES ('${title}', '${city}', '${hourly_rate}', '${description}','${schedule}', '${startDate}')`
 // Will need logic to read the user_id_created_by 
 // wee have to define our sql query, in this case we are inserting something into the dataabse, 
 pool.query(sqlQuery)
 .then(payload=>{
-  console.log(req.body);
+  // console.log(req.body);
   // console.log('The following gigs were inserted'+req.body)
   res.locals = req.body
   return next();
 })
 .catch(err =>{
   return next({
-    log:'Error!',
+    log: 'Error!',
     message: 'Gig insertion failed'
   })
 })
@@ -139,6 +144,9 @@ controller.addGig = (req, res, next) => {
   // create new entry in USER_JOB_ASSIGNED_TO_JOIN 
     // take the gig's ID
     // take the user's ID
+
+  // Make a query to check if this entry already exists in the table, if not run the follow up query to add it
+
   const sqlQuery = `INSERT INTO user_job_assigned_to_join (user_id, job_id) VALUES ('${user_id}', '${job_id}')`;
   pool.query(sqlQuery)
   .then(payload=>{
@@ -147,14 +155,39 @@ controller.addGig = (req, res, next) => {
   })
   .catch(err =>{
     return next({
-      log:'Error!',
-      message: 'Gig insertion failed'
+      log: 'Error!',
+      message: 'User failed to add gig'
     })
   })  
-  /*SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
-FROM Orders
-INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
-*/  
+  
+};
+//SELECT * FROM user_job_assigned_to_join WHERE job_id =1
+// Check if gig has already been added to the join table
+controller.checkGig = (req, res, next) => {
+  const { job_id } = req.body
+  const sqlQuery = `SELECT * FROM user_job_assigned_to_join WHERE job_id='${job_id}'`;
+
+  pool.query(sqlQuery)
+  .then(payload=>{
+    if (payload.rows.length === 0) {
+      // checking to see if result.rows.length is an empty array
+      // if the entry does not exist in the table, result.rows.length is an empty array
+      console.log(payload.rows);
+      return next();
+    } else {
+      return next({
+        log: 'Error!',
+        message: 'Gig has already been picked up!',
+      });
+    }
+  })
+  .catch(err =>{
+    return next({
+      log: 'Error!',
+      message: 'Failed to search entry from database in checkGig'
+    })
+  })  
+  
 };
 
 // remove a gig from user
@@ -165,8 +198,6 @@ controller.removeGig = (req, res, next) => {
 
   pool.query(sqlQuery)
   .then(payload=>{
-    console.log(payload);
-    console.log(payload.result.rowCount)
     // console.log('The following gigs were inserted'+req.body)
     res.locals = req.body
     return next();
@@ -174,7 +205,7 @@ controller.removeGig = (req, res, next) => {
   .catch(err =>{
     return next({
       log:'Error!',
-      message: 'Gig deletion failed'
+      message: 'User failed to delete gig'
     })
   })  
 };
@@ -192,7 +223,7 @@ controller.getUserGigs = (req, res, next) => {
   })
   .catch(err =>{
     return next({
-      log:'Error!',
+      log: 'Error!',
       message: 'Getting user gigs failed'
     })
   })  
