@@ -29,11 +29,11 @@ controller.getUsers = (req, res, next) => {
 
 // Retrieves state data from front end and adds username/password to the database
 controller.registerUser = (req, res, next) => {
-  const { username, password } = req.body
-  const sqlQuery = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
+  const { username } = req.body
+  const sqlQuery = `INSERT INTO users (username) VALUES ('${username}')`;
   pool.query(sqlQuery)
     .then(payload => {
-      console.log ('The following user/password were added ' + payload )
+      console.log(payload)
       return next();
     })
     .catch (err => {
@@ -115,8 +115,10 @@ controller.getGigsByCity = (req, res, next) => {
 // Create a new gig
 controller.createGig = (req, res, next) => {
 // we have t odestructure the req.body and make sure our labels match the keys on the req.body
-const { title, city, hourly_rate, description, schedule, startDate } = req.body;
-const sqlQuery = `INSERT INTO Gigs (title, city, hourly_rate, description, schedule, start_date) VALUES ('${title}', '${city}', '${hourly_rate}', '${description}','${schedule}', '${startDate}')`
+const { title, city, hourly_rate, description, schedule, startDate, username_created_by} = req.body;
+const sqlQuery = `INSERT INTO Gigs (title, city, hourly_rate, description, schedule, start_date, username_created_by) VALUES ('${title}', '${city}', '${hourly_rate}', '${description}','${schedule}', '${startDate}', '${username_created_by}')`
+
+console.log(sqlQuery);
 // Will need logic to read the user_id_created_by 
 // wee have to define our sql query, in this case we are inserting something into the dataabse, 
 pool.query(sqlQuery)
@@ -139,7 +141,7 @@ pool.query(sqlQuery)
 
 // Add a gig to user
 controller.addGig = (req, res, next) => {
-  const { user_id, job_id } = req.body
+  const { user_username, job_id } = req.body
   // assign user's ID to "user_id_assigned_to" in the gigs table
   // create new entry in USER_JOB_ASSIGNED_TO_JOIN 
     // take the gig's ID
@@ -147,7 +149,10 @@ controller.addGig = (req, res, next) => {
 
   // Make a query to check if this entry already exists in the table, if not run the follow up query to add it
 
-  const sqlQuery = `INSERT INTO user_job_assigned_to_join (user_id, job_id) VALUES ('${user_id}', '${job_id}')`;
+  const sqlQuery = `INSERT INTO user_job_assigned_to_join (user_username, job_id) VALUES ('${user_username}', '${job_id}')`;
+
+  console.log(sqlQuery)
+
   pool.query(sqlQuery)
   .then(payload=>{
     res.locals = req.body
@@ -166,6 +171,7 @@ controller.addGig = (req, res, next) => {
 controller.checkGig = (req, res, next) => {
   const { job_id } = req.body
   const sqlQuery = `SELECT * FROM user_job_assigned_to_join WHERE job_id='${job_id}'`;
+  
 
   pool.query(sqlQuery)
   .then(payload=>{
@@ -212,8 +218,8 @@ controller.removeGig = (req, res, next) => {
 
 // Display all user's added gigs
 controller.getUserGigs = (req, res, next) => {
-  const { user_id } = req.body
-  const sqlQuery = `SELECT Gigs.* FROM user_job_assigned_to_join INNER JOIN Gigs ON user_job_assigned_to_join.job_id = Gigs._id WHERE user_job_assigned_to_join.user_id='${user_id}'`
+  const { username } = req.body
+  const sqlQuery = `SELECT Gigs.* FROM user_job_assigned_to_join INNER JOIN Gigs ON user_job_assigned_to_join.job_id = Gigs._id WHERE user_job_assigned_to_join.user_username='${username}'`
   
   pool.query(sqlQuery)
   .then(payload=>{

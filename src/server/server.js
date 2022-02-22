@@ -27,12 +27,12 @@ app.post('/login', controller.authLogin, (req, res) => {
 
 // Retrieving all associated gigs
 app.get('/gigs', controller.getAllGigs, (req, res) => {
-  res.status(200).json(res.locals);
+  res.status(200).send(res.locals);
 })
 
 // Retrieve all gigs by city
-app.get('/gigsByCity', controller.getGigsByCity, (req, res) => {
-  res.status(200).json(res.locals);
+app.post('/gigsByCity', controller.getGigsByCity, (req, res) => {
+  res.status(200).send(res.locals);
 })
 
 // Client makes a new gig 
@@ -51,7 +51,7 @@ app.delete('/removeGig', controller.removeGig, (req, res) => {
 })
 
 // Displays all the user's gigs
-app.get('/userGigs', controller.getUserGigs, (req, res) => {
+app.post('/userGigs', controller.getUserGigs, (req, res) => {
   res.status(200).json(res.locals);
 })
 
@@ -72,4 +72,4 @@ app.use((err, req, res, next) => {
 });
 
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+app.listen(8080, () => console.log('Server running on port 8080'));

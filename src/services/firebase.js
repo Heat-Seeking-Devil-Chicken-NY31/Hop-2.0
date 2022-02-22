@@ -29,6 +29,13 @@ export default async function signInWithGoogle() {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       const user = result.user;
+      const register = await fetch("http://localhost:8080/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },  
+      body: JSON.stringify({
+        username: user.uid
+      })
+    });
       sessionStorage.setItem("uid", user.uid);
     })
     .catch((error) => {
