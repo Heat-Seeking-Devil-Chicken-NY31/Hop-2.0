@@ -13,17 +13,35 @@ function PostGig() {
     setInputs((values) => ({ ...values, [name]: value }));
   };
   const navigate = useNavigate();
-
+ // TODO post gig in DB
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // TODO post gig in DB
+    const uid = sessionStorage.getItem('uid');
+    const postGig = await fetch("http://localhost:8080/createGig", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },  
+      body: JSON.stringify({
+        title: inputs.title,
+        city: inputs.city,
+        hourly_rate: inputs.hourlyRate,
+         description: inputs.description,
+          schedule: inputs.schedule, 
+          startDate:  inputs.startDate,
+        username_created_by: uid
+      })
+    });
+    
     await navigate("/MyGigs");
+   
   };
+   
+   
+  
 
   return (
     <>
       <Navbar />
-      <form onSubmit={handleSubmit}>
+      <form className="m-auto w-100 d-flex justify-content-center" onSubmit={handleSubmit}>
         <label>
           Title:
           <input
@@ -78,7 +96,7 @@ function PostGig() {
             onChange={handleChange}
           />
         </label>
-        <input type="submit" />
+        <input className="btn-primary" type="submit" />
       </form>
     </>
   );
