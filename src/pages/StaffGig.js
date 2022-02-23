@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import Navbar from "../components/Navbar";
+import ResponsiveAppBar from '../components/NavbarMUI'
 
 function StaffGig() {
   const [gigs, setGigs] = useState(null);
@@ -35,6 +36,7 @@ function StaffGig() {
 
   return (
     <div>
+      <ResponsiveAppBar/>
       <Navbar />
       <select value={city} onChange={handleChange}>
         <option value=""></option>
