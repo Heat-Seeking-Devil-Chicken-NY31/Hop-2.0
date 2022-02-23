@@ -120,11 +120,11 @@ controller.getGigsByAttribute = (req, res, next) => {
   let sqlQuery = `SELECT * FROM gigs`;
 
   let conditions = '';
-  if (city !== undefined) conditions += `city='${city}'`;
-  if (title !== undefined) conditions += conditions === '' ? `title LIKE '%${title}%'` : ` AND title LIKE '%${title}%'`;
+  if (city !== undefined) conditions += `city ILIKE '%${city}%'`;
+  if (title !== undefined) conditions += conditions === '' ? `title ILIKE '%${title}%'` : ` AND title ILIKE '%${title}%'`;
   if (hourly_rate_min !== undefined) conditions += conditions === '' ? `hourly_rate >= ${hourly_rate_min}` : ` AND hourly_rate >= ${hourly_rate_min}`;
   if (hourly_rate_max !== undefined) conditions += conditions === '' ? `hourly_rate <= ${hourly_rate_max}` : ` AND hourly_rate <= ${hourly_rate_max}`;
-  if (description !== undefined) conditions += conditions === '' ? `description LIKE '%${description}%'` : ` AND description LIKE '%${description}%'`;
+  if (description !== undefined) conditions += conditions === '' ? `description ILIKE '%${description}%'` : ` AND description ILIKE '%${description}%'`;
   if (conditions !== '') sqlQuery += ` WHERE ${conditions}`;
   
   console.log(sqlQuery);
