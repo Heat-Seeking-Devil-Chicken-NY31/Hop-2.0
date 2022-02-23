@@ -12,6 +12,7 @@ function Card({
   staffCard,
   provider,
   client,
+  myGigCard
 }) {
   
   const navigate = useNavigate();
@@ -32,6 +33,48 @@ function Card({
 
     await navigate("/MyGigs");
   };
+
+  // functionality to delete a card
+  const removeGig = async () => {
+    // TODO adds user as the provider for the selected gig
+    const uid = sessionStorage.getItem('uid');
+    console.log(id)
+   
+    const userFetch = await fetch("http://localhost:8080/removeGig", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },  
+      body: JSON.stringify({
+        user_username: uid,
+        job_id: id,
+      })
+    });
+    
+    // MyGigs is reloaded after deleted from DB
+    await navigate("/MyGigs");
+
+  };
+
+
+  // functionality to update a Gig
+  const updateGig = async () => {
+    // TODO adds user as the provider for the selected gig
+    const uid = sessionStorage.getItem('uid');
+    // console.log(id)
+   
+    const userFetch = await fetch("http://localhost:8080/updateGig", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },  
+      body: JSON.stringify({
+        user_username: uid,
+        job_id: id,
+      })
+    });
+    
+    // MyGigs is reloaded after deleted from DB
+    await navigate("/MyGigs");
+
+  };
+
   return (
     <div className="w-50 m-auto">
       <div className="card position-relative mt-4 m-auto px-3">
@@ -49,6 +92,16 @@ function Card({
           {staffCard && (
             <button onClick={staffGig} className="btn-primary">
               Staff Gig
+            </button>
+          )}
+          {myGigCard && (
+            <button onClick={removeGig} className="btn-danger">
+              Remove Gig
+            </button>
+          )}
+          {myGigCard && (
+            <button onClick={updateGig} className="btn-info">
+              Update Gig
             </button>
           )}
         </div>

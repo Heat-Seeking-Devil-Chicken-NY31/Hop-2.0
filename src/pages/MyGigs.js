@@ -20,6 +20,7 @@ function MyGigs() {
     const userFormatted = await userGigs.json()
     await setGigs(userFormatted);
   }, []);
+
   return (
     <div>
       <Navbar />
@@ -38,7 +39,8 @@ function MyGigs() {
             provider={gig.provider}
             client={gig.client}
             staffCard={false}
-          />
+            myGigCard={true} 
+            />
         ))}
     </div>
   );
