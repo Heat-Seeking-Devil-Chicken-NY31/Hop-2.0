@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import signInWithGoogle from "../services/firebase";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
+import ResponsiveAppBar from '../components/NavbarMUI'
 import Navbar from "../components/Navbar";
 
 function PostGig() {
@@ -40,6 +41,7 @@ function PostGig() {
 
   return (
     <>
+    <ResponsiveAppBar/>
       <Navbar />
       <form className="m-auto w-100 d-flex justify-content-center" onSubmit={handleSubmit}>
         <label>
