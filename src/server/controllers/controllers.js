@@ -112,6 +112,37 @@ controller.getGigsByCity = (req, res, next) => {
   });
 };
 
+// Gets the gigs filtered by attributes defined in body
+controller.getGigsByAttribute = (req, res, next) => { 
+  const { city, title, hourly_rate_max, hourly_rate_min, description } = req.body;
+
+  // Initial portion of query
+  let sqlQuery = `SELECT * FROM gigs`;
+
+  let conditions = '';
+  if (city !== undefined) conditions += `city='${city}'`;
+  if (title !== undefined) conditions += conditions === '' ? `title LIKE '%${title}%'` : ` AND title LIKE '%${title}%'`;
+  if (hourly_rate_min !== undefined) conditions += conditions === '' ? `hourly_rate >= ${hourly_rate_min}` : ` AND hourly_rate >= ${hourly_rate_min}`;
+  if (hourly_rate_max !== undefined) conditions += conditions === '' ? `hourly_rate <= ${hourly_rate_max}` : ` AND hourly_rate <= ${hourly_rate_max}`;
+  if (description !== undefined) conditions += conditions === '' ? `description LIKE '%${description}%'` : ` AND description LIKE '%${description}%'`;
+  if (conditions !== '') sqlQuery += ` WHERE ${conditions}`;
+  
+  console.log(sqlQuery);
+
+  pool.query(sqlQuery)
+  .then(payload => {
+    console.log ('The following gigs were retrieved' + payload.rows);
+    res.locals = payload.rows;
+    return next();
+  })
+  .catch (err => {
+    return next({
+      log:'Error!', 
+      message: 'Retrieving gigs failed'
+    });
+  });
+};
+
 // Create a new gig
 controller.createGig = (req, res, next) => {
 // we have t odestructure the req.body and make sure our labels match the keys on the req.body
