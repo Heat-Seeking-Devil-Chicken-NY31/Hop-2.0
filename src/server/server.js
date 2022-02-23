@@ -10,6 +10,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+
+
 // Gets all users stored in the database, not used in front end was just used for testing
 app.get('/getUsers', controller.getUsers, (req, res) => {
   res.status(200).send(res.locals)
@@ -35,6 +37,10 @@ app.post('/gigsByCity', controller.getGigsByCity, (req, res) => {
   res.status(200).send(res.locals);
 })
 
+// Retrieve filtered list of gigs based on the following parameters: city, title, hourly_rate_max, hourly_rate_min, description
+app.post('/gigsByAttribute', controller.getGigsByAttribute, (req, res) => {
+  res.status(200).send(res.locals);
+})
 // Client makes a new gig 
 app.post('/createGig', controller.createGig, (req, res) => {
   res.status(200).json(res.locals);
