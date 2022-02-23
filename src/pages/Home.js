@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { makeStyles } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import Typography from '@material-ui/core/Typography';
 // import Box from '@material-ui/core/Box';
 import { AppBar } from "@mui/material";
@@ -19,7 +19,8 @@ import ResponsiveAppBar from '../components/NavbarMUI';
 
 const useStyles = makeStyles((theme) => ({
   appBar:{
-    backgroundColor: "rgba(89, 39, 245, 0.24)"
+    backgroundColor: "rgba(89, 39, 245, 0.24)",
+    primary: "black"
   },
   hero:{
     backgroundImage: `linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('https://unsplash.com/photos/EkyuhD7uwSM')`,
