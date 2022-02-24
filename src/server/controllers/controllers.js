@@ -4,12 +4,10 @@ const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
 
 
-
 const PG_URI = process.env.DB_CONNECTION_STRING;
 const pool = new Pool({
   connectionString: PG_URI
 });
-/////////////////////////////////////////////////////////////////////////////////
 
 
 const controller = {};

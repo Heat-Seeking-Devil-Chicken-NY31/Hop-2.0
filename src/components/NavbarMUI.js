@@ -11,6 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import thumper from './ThumperHop2.0.png';
 
 const pages = ['Home', 'Post a Gig', 'Staff a Gig', 'My Gigs'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -106,8 +107,7 @@ const ResponsiveAppBar = () => {
             <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    //import and use curly braces for image
-                <Avatar alt="Hop Logo" src="./ThumperHop2.0.png" />
+                <Avatar alt="Hop Logo" src={thumper} />
                 </IconButton>
             </Tooltip>
             <Menu
