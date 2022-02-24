@@ -22,7 +22,7 @@ controller.getUsers = (req, res, next) => {
       next();
     }).catch(err=>{
       return next({
-        log:'Error!',
+        log:'Error in getUsers middleware!',
         message:'Cant get players'
       });
     });
@@ -39,7 +39,7 @@ controller.registerUser = (req, res, next) => {
     })
     .catch (err => {
       return next({
-        log:'Error!',
+        log:'Error in registerUser middleware!',
         message:'Invalid username or password'
       });
     });
@@ -53,7 +53,7 @@ controller.authLogin = (req, res, next) => {
   pool.query(sqlQuery, (error, result) => {
     if (error) {
       return next({
-        log: 'Error!',
+        log: 'Error in authLogin middleware!',
         message: 'Error in SQL Query for authLogin' + error,
       });
     }
@@ -64,7 +64,7 @@ controller.authLogin = (req, res, next) => {
       console.log(result.rows);
     } else {
       return next({
-        log: 'Error!',
+        log: 'Error in authLogin middleware!',
         message: 'Invalid User/Password combination',
       });
     }
@@ -87,7 +87,7 @@ controller.getAllGigs = (req, res, next) => {
   })
   .catch (err => {
     return next({
-      log: 'Error!',
+      log: 'Error in getAllGigs middleware!',
       message: 'Retrieving gigs failed'
     });
   });
@@ -107,7 +107,7 @@ controller.getGigsByCity = (req, res, next) => {
   })
   .catch (err => {
     return next({
-      log:'Error!',
+      log:'Error in getGigsByCity!',
       message: 'Retrieving gigs failed'
     });
   });
@@ -162,7 +162,7 @@ pool.query(sqlQuery)
 })
 .catch(err =>{
   return next({
-    log: 'Error!',
+    log: 'Error in createGig middleware!',
     message: 'Gig insertion failed'
   })
 })
@@ -192,7 +192,7 @@ controller.addGig = (req, res, next) => {
   })
   .catch(err =>{
     return next({
-      log: 'Error!',
+      log: 'Error in addGig middleware!',
       message: 'User failed to add gig'
     })
   })  
@@ -214,14 +214,14 @@ controller.checkGig = (req, res, next) => {
       return next();
     } else {
       return next({
-        log: 'Error!',
+        log: 'Error in checkGig middleware!',
         message: 'Gig has already been picked up!',
       });
     }
   })
   .catch(err =>{
     return next({
-      log: 'Error!',
+      log: 'Error in checkGig middleware!',
       message: 'Failed to search entry from database in checkGig'
     })
   })  
@@ -231,18 +231,20 @@ controller.checkGig = (req, res, next) => {
 // remove a gig from user
 controller.removeGig = (req, res, next) => {
   
-  const { user_id, job_id } = req.body
-  const sqlQuery = `DELETE FROM user_job_assigned_to_join WHERE user_id='${user_id}' AND job_id='${job_id}'`;
+  const { user_username, job_id } = req.body
+  const sqlQuery = `DELETE FROM user_job_assigned_to_join WHERE user_username='${user_username}' AND job_id='${job_id}';`;
+
+  console.log(sqlQuery);
 
   pool.query(sqlQuery)
-  .then(payload=>{
+  .then(payload => {
     // console.log('The following gigs were inserted'+req.body)
     res.locals = req.body
     return next();
   })
   .catch(err =>{
     return next({
-      log:'Error!',
+      log:'Error in removeGig middleware!',
       message: 'User failed to delete gig'
     })
   })  
@@ -261,7 +263,7 @@ controller.getUserGigs = (req, res, next) => {
   })
   .catch(err =>{
     return next({
-      log: 'Error!',
+      log: 'Error in getUserGigs middleware!',
       message: 'Getting user gigs failed'
     })
   })  
