@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
 const controller = require('./controllers/controllers.js')
+const dotenv = require('dotenv').config();
+
 
 const app = express();
 app.use(cors());
@@ -51,8 +53,9 @@ app.post('/addGig', controller.checkGig, controller.addGig, (req, res) => {
   res.status(200).send('add gig is working properly');
 })
 
-// User removing a gig
-app.delete('/removeGig', controller.removeGig, (req, res) => {
+// User deleting a gig
+// add middleware to refresh the myGigs page
+app.delete('/removeGig', controller.removeGig, controller.getUserGigs, (req, res) => {
   res.status(200).send('remove gig is working properly');
 })
 
@@ -61,6 +64,9 @@ app.post('/userGigs', controller.getUserGigs, (req, res) => {
   res.status(200).json(res.locals);
 })
 
+// app.put('/updateGig', controller.updateGig, (req, res) => {
+//   res.status(200).send('')
+// })
 
 
 

@@ -6,7 +6,7 @@ export default function Login() {
   const navigate = useNavigate();
   async function login() {
     await signInWithGoogle();
-    await navigate("/");
+    await navigate("/Home");
   }
   return (
     <>
