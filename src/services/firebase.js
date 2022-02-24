@@ -1,14 +1,17 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+const { initializeApp } = require("firebase/app");
+const { getFirestore  } = require("firebase/firestore");
+const { useNavigate } = require("react-router-dom");
 
-import {
+const {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
   signInWithRedirect,
-} from "firebase/auth";
-import { Route } from "react-router-dom";
+} = require ("firebase/auth");
+const { Route } = require("react-router-dom");
+const { modalUnstyledClasses } = require("@mui/material");
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyBqS_gKkZJIlW4KUdW0x3XFvNBgZuhuQsw",
   authDomain: "react-template-c8bf7.firebaseapp.com",
@@ -18,12 +21,12 @@ const firebaseConfig = {
   appId: "1:327870582787:web:550f9d61cb735e371efe36",
 };
 
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
 
-export default async function signInWithGoogle() {
+async function signInWithGoogle() {
   await signInWithPopup(auth, provider)
     .then(async (result) => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -48,3 +51,6 @@ export default async function signInWithGoogle() {
       const credential = GoogleAuthProvider.credentialFromError(error);
     });
 }
+
+module.exports = firebaseApp;
+module.exports = signInWithGoogle;

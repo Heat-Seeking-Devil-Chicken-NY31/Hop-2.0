@@ -1,6 +1,8 @@
 // const db = require('../database/db.js');
 // This pool needs to be moved to a separate file when issues are resolved
 const { Pool } = require('pg');
+const { default: signInWithGoogle } = require('../../services/firebase');
+const firebase = require('firebase/app');
 
 const PG_URI = 'postgres://bpjberhu:bvRHB-StO79otlzUxLoIe0B-xW-NDQ-J@jelani.db.elephantsql.com/bpjberhu';
 const pool = new Pool({
@@ -46,6 +48,24 @@ controller.registerUser = (req, res, next) => {
 
 // Retrieves state and checks if it exists in the users table
 controller.authLogin = (req, res, next) => {
+  
+  // // Build Firebase credential with the Google ID token.
+  var credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+
+  // // Sign in with credential from the Google user.
+  firebase.auth().signInWithCredential(credential).catch((error) => {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+  });
+
+
+
   const { username, password } = req.body;
   const sqlQuery = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
 
@@ -131,7 +151,6 @@ controller.getGigsByAttribute = (req, res, next) => {
 
   pool.query(sqlQuery)
   .then(payload => {
-    console.log ('The following gigs were retrieved' + payload.rows);
     res.locals = payload.rows;
     return next();
   })
