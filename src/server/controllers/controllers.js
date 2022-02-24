@@ -2,7 +2,7 @@
 // This pool needs to be moved to a separate file when issues are resolved
 const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
-
+const {OAuth2Client} = require('google-auth-library');
 
 
 const PG_URI = process.env.DB_CONNECTION_STRING;
@@ -14,6 +14,9 @@ const pool = new Pool({
 
 const controller = {};
 
+// LOGIN RELATED FUNCTIONS
+
+// Get existing users from DB
 controller.getUsers = (req, res, next) => {
   const sqlQuery = 'SELECT * from users';
   console.log(req)
@@ -30,7 +33,7 @@ controller.getUsers = (req, res, next) => {
     });
 };
 
-// Retrieves state data from front end and adds username/password to the database
+// Handling for new users - if uid is not yet present in DB, add user to the database
 controller.registerUser = (req, res, next) => {
   const { username } = req.body
   const sqlQuery = `INSERT INTO users (username) VALUES ('${username}')`;
@@ -49,6 +52,28 @@ controller.registerUser = (req, res, next) => {
 
 // Retrieves state and checks if it exists in the users table
 controller.authLogin = (req, res, next) => {
+
+  // Get Google Token from the request body and check validity
+ 
+  const client = new OAuth2Client(CLIENT_ID);
+  async function verify() {
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    });
+    const payload = ticket.getPayload();
+    const userid = payload['sub'];
+    // If request specified a G Suite domain:
+    // const domain = payload['hd'];
+  }
+  verify().catch(console.error);
+
+
+  // If valid, leave a session cookie on user's desktop and save to DB
+
+
   const { username, password } = req.body;
   const sqlQuery = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
 
@@ -74,6 +99,10 @@ controller.authLogin = (req, res, next) => {
     return next()
   })  
 };
+
+controller.isLogged
+
+// DATA RELATED FUNCTIONS
 
 // Sends the entire gig table in res.locals
   // needs to be specified later on so that it only sends gigs associated with that provider/user

@@ -26,8 +26,11 @@ const auth = getAuth();
 export default async function signInWithGoogle() {
   await signInWithPopup(auth, provider)
     .then(async (result) => {
+      console.log("Google Login Running");
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
+      console.log("Google Login Result");
+      console.log(result);
       const user = result.user;
       const register = await fetch("http://localhost:8080/register", {
       method: "POST",
@@ -39,6 +42,7 @@ export default async function signInWithGoogle() {
       sessionStorage.setItem("uid", user.uid);
     })
     .catch((error) => {
+      console.log(error.code);
       // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
