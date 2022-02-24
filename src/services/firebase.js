@@ -9,14 +9,16 @@ import {
   signInWithRedirect,
 } from "firebase/auth";
 import { Route } from "react-router-dom";
+import { modalUnstyledClasses } from "@mui/material";
 const firebaseConfig = {
-  apiKey: "AIzaSyBqS_gKkZJIlW4KUdW0x3XFvNBgZuhuQsw",
-  authDomain: "react-template-c8bf7.firebaseapp.com",
-  projectId: "react-template-c8bf7",
-  storageBucket: "react-template-c8bf7.appspot.com",
-  messagingSenderId: "327870582787",
-  appId: "1:327870582787:web:550f9d61cb735e371efe36",
+  apiKey: 'AIzaSyDW1d2Hg1isvOq-5HDe-hdXFfud5qngXO8',
+  authDomain: 'hop2-0.firebaseapp.com',
+  projectId: 'hop2-0',
+  storageBucket: 'hop2-0.appspot.com',
+  messagingSenderId: '710280260317',
+  appId: '1:710280260317:web:c64d3243ac298081978934'
 };
+
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -26,8 +28,12 @@ const auth = getAuth();
 export default async function signInWithGoogle() {
   await signInWithPopup(auth, provider)
     .then(async (result) => {
+      console.log("Google Login Running");
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
+      console.log("Google Login Result");
+      console.log(credential.accessToken);
+      console.log(result);
       const user = result.user;
       const register = await fetch("http://localhost:8080/register", {
       method: "POST",
@@ -39,6 +45,7 @@ export default async function signInWithGoogle() {
       sessionStorage.setItem("uid", user.uid);
     })
     .catch((error) => {
+      console.log(error.code);
       // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -48,3 +55,4 @@ export default async function signInWithGoogle() {
       const credential = GoogleAuthProvider.credentialFromError(error);
     });
 }
+
