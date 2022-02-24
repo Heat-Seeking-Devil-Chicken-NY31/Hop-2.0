@@ -5,21 +5,23 @@ import Navbar from "../components/Navbar";
 function MyGigs() {
   const [gigs, setGigs] = useState(null);
 
-  useEffect(async () => {
-    // TODO get user's gigs where they are a provider or client
-    
-    const uid = sessionStorage.getItem('uid');
-    const userGigs = await fetch("http://localhost:8080/userGigs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },  
-      body: JSON.stringify({
-        username: uid
-      })
-    });
-   
-    const userFormatted = await userGigs.json()
-    await setGigs(userFormatted);
-  }, []);
+  const myGigPage = async () => {
+  // TODO get user's gigs where they are a provider or client
+  
+  const uid = sessionStorage.getItem('uid');
+  const userGigs = await fetch("http://localhost:8080/userGigs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },  
+    body: JSON.stringify({
+      username: uid
+    })
+  });
+ 
+  const userFormatted = await userGigs.json()
+  await setGigs(userFormatted);
+}
+
+  useEffect(myGigPage, []);
 
   return (
     <div>
@@ -39,7 +41,8 @@ function MyGigs() {
             provider={gig.provider}
             client={gig.client}
             staffCard={false}
-            myGigCard={true} 
+            myGigCard={true}
+            reloadGigs={myGigPage} 
             />
         ))}
     </div>

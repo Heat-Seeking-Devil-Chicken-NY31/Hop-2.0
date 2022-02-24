@@ -12,7 +12,8 @@ function Card({
   staffCard,
   provider,
   client,
-  myGigCard
+  myGigCard,
+  reloadGigs
 }) {
   
   const navigate = useNavigate();
@@ -51,6 +52,8 @@ function Card({
     
     // MyGigs is reloaded after deleted from DB
     await navigate("/MyGigs");
+    
+    reloadGigs();
 
   };
 
