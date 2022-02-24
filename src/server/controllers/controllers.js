@@ -1,12 +1,13 @@
 // const db = require('../database/db.js');
 // This pool needs to be moved to a separate file when issues are resolved
 const { Pool } = require('pg');
+const dotenv = require('dotenv').config();
 
-const PG_URI = 'postgres://bpjberhu:bvRHB-StO79otlzUxLoIe0B-xW-NDQ-J@jelani.db.elephantsql.com/bpjberhu';
+
+const PG_URI = process.env.DB_CONNECTION_STRING;
 const pool = new Pool({
   connectionString: PG_URI
 });
-/////////////////////////////////////////////////////////////////////////////////
 
 
 const controller = {};
