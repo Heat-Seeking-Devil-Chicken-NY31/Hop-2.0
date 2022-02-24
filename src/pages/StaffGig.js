@@ -2,8 +2,20 @@ import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import Navbar from "../components/Navbar";
 
+import ResponsiveAppBar from '../components/NavbarMUI'
+import Filters from "../components/Filters";
+
+
 function StaffGig() {
   const [gigs, setGigs] = useState(null);
+  
+  const defaultFilters = {city: '', 
+    title: '', 
+    hourly_rate_max: '', 
+    hourly_rate_min: '',
+    description: ''
+  };
+  const [filterValues, setFilters] = useState(defaultFilters);
 
   useEffect(async () => {
     // TODO get 10 most recent gigs //get gigs request here.
@@ -11,37 +23,50 @@ function StaffGig() {
     const formatted = await allGigs.json()
     
     await setGigs(formatted);
+    await setFilters(defaultFilters);
+    
   }, []);
 
   const [city, setCity] = useState(null);
+
   function handleChange(e) {
     setCity(e.target.value);
   }
-  useEffect(async () => {
-    // TODO set gigs filtered by city
-    const cityGigs = await fetch("http://localhost:8080/gigsByCity", {
+
+  async function getFilteredData() {
+    
+    console.log("Requesting filtered data");
+
+    const reqBody = {
+      city: filterValues.city === '' ? undefined : filterValues.city,
+      title: filterValues.title === '' ? undefined : filterValues.title,
+      hourly_rate_min: filterValues.hourly_rate_min === '' ? undefined : filterValues.hourly_rate_min,
+      hourly_rate_max: filterValues.hourly_rate_max === '' ? undefined : filterValues.hourly_rate_max,
+      description: filterValues.description === '' ? undefined : filterValues.description,
+    }
+
+    console.log(reqBody);
+
+    let result = await fetch("http://localhost:8080/gigsByAttribute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },  
-      body: JSON.stringify({
-        city: city
-      })
+      body: JSON.stringify(reqBody)
     });
    
-    const cityFormatted = await cityGigs.json()
-    console.log(cityFormatted)
-    await setGigs(cityFormatted);
+    result = await result.json()
+    console.log(result)
+    await setGigs(result);
 
-  }, [city]);
+
+  }
+
 
   return (
     <div>
+      <ResponsiveAppBar/>
       <Navbar />
-      <select value={city} onChange={handleChange}>
-        <option value=""></option>
-        <option value="Chicago">Chicago</option>
-        <option value="New York City">New York City</option>
-        <option value="Los Angeles">Los Angeles </option>
-      </select>
+      <Filters filterValues = {filterValues} setFilters = {setFilters} getFilteredData = {getFilteredData} />
+      
       {gigs &&
         gigs.map((gig) => (
           <Card

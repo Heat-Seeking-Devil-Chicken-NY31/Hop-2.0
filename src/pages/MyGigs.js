@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import Navbar from "../components/Navbar";
+import ResponsiveAppBar from '../components/NavbarMUI'
 
 function MyGigs() {
   const [gigs, setGigs] = useState(null);
@@ -25,6 +26,7 @@ function MyGigs() {
 
   return (
     <div>
+      <ResponsiveAppBar/>
       <Navbar />
 
       {gigs &&
