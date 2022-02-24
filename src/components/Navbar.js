@@ -23,7 +23,7 @@ function Navbar() {
             id="navbarNavDropdown"
           >
             <ul className="navbar-nav">
-              <Link to="/" className="nav-link m-auto px-5">
+              <Link to="/Home" className="nav-link m-auto px-5">
                 Home
               </Link>
               <Link to="/PostGig" className="nav-link m-auto px-5">

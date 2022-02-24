@@ -108,7 +108,7 @@ function Card({
             </button>
           )}
         </div>
-      </div>
+      </div>{" "}
     </div>
   );
 }
