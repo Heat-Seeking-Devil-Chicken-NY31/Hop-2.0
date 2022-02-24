@@ -31,38 +31,32 @@ import { Box } from "@material-ui/core";
       primary: "black"
     },
     gridItem:{
-      border: 1,
+      border: 3,
       width: '5rem',
       height: '5rem',
       borderRadius: '8px',
-    }
+      display: "flex",
+      justifyContent: "center",
+    },
   }));
   
   const classes= useStyles();
-
+  
   return (
-    <div padding>
+    <div>
         <ResponsiveAppBar/>
-        <Grid container direction="row" spacing={3} justifyContent="space-evenly" alignItems="center">
-          <Grid item xs= {12} md= {6} className={classes.gridItem}>
-            <Box height="200px" width="200px">
+        <Grid container direction="row" spacing={3} justifyContent="center" alignItems="center">
+          <Grid item sx={{width: "50%", height: "50%"}} className={classes.gridItem}>
               <ProductDescription/>
-            </Box>
           </Grid>
-          <Grid item xs= {12} md= {6} className={classes.gridItem}>
-            <Box>
+          <Grid item sx={{width: "50%", height: "50%"}} className={classes.gridItem}>
               <ExistingUserLink/>
-            </Box>
           </Grid>
-          <Grid item xs= {12} md= {6} className={classes.gridItem}>
-            <Box>
+          <Grid item sx={{width: "50%", height: "50%"}} className={classes.gridItem}>
               <UserLink/>
-            </Box>
           </Grid>
-          <Grid item xs= {12} md= {6} className={classes.gridItem}>
-            <Box>
+          <Grid item sx={{width: "50%", height: "50%"}} className={classes.gridItem}>
               <EmployerLink/>
-            </Box>
           </Grid>
         </Grid>
         <AppBar className={classes.appBar} position="static">

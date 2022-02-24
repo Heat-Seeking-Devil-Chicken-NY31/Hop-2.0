@@ -1,13 +1,8 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Button, Box, Typography, CardMedia, CardActions, Card, CardContent } from '@mui/material';
+
 
 import thumper from "../LandingComponents/backgrounds/ThumperHop2.0.300pxHeight.png";
-
 
 const styles = {
     cardMedia: {
@@ -20,34 +15,30 @@ const styles = {
         display: 'block',
         width: '30vw',
         transitionDuration: '0.3s',
-        height: '45vw'
-    }
+        height: '30vw'
+    },
+    center: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
 };
 
-/*
-        <Card style={styles.paperContainer}>
-                Product Description
-        </Card>
-*/
-
 const ProductDescription = () => (
-        <Card sx={{ maxWidth:400}} style= {styles.cardBody}>
+    <Card sx={{ maxWidth: 400}} style= {styles.cardBody}>
         <CardMedia         
         component= "img"
-        height= "320px"
         image= {thumper}
         alt= "Thumper Logo"
         />
         <CardContent>
-            <Typography gutterBottom variant="h5" component="div" fontColor="black">
+            <Typography gutterBottom variant="h5" component="div" fontColor="black" style={styles.center}>
             What is Hop 2.0?
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            <Typography variant="body2" color="text.secondary" style={styles.center} textAlign='center'>
+            Hop 2.0 is an app that connects employers with prospective employees. We are especially focused on part time and contract gigs.
             </Typography>
         </CardContent>
-        </Card>
+    </Card>
 )
 
 export default ProductDescription;
