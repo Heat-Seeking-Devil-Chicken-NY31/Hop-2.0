@@ -77,7 +77,7 @@ controller.authLogin = (req, res, next) => {
   // needs to be specified later on so that it only sends gigs associated with that provider/user
 controller.getAllGigs = (req, res, next) => { 
   // const { id, title, city, rate, desc, schedule, startDate, provider, client } = req.body;
-  const sqlQuery = `SELECT * FROM gigs`;
+  const sqlQuery = `SELECT * FROM gigs WHERE _id NOT IN (SELECT job_id FROM user_job_assigned_to_join)`;
 
   pool.query(sqlQuery)
   .then(payload => {
@@ -96,7 +96,7 @@ controller.getAllGigs = (req, res, next) => {
 // Gets the gigs filtered by city
 controller.getGigsByCity = (req, res, next) => { 
   const { city } = req.body;
-  const sqlQuery = `SELECT * FROM gigs WHERE city='${city}'`;
+  const sqlQuery = `SELECT * FROM gigs WHERE _id NOT IN (SELECT job_id FROM user_job_assigned_to_join) AND city='${city}'`;
   // const sqlQuery = `SELECT * FROM gigs WHERE city='Los Angeles'`;
 
   pool.query(sqlQuery)
@@ -118,10 +118,10 @@ controller.getGigsByAttribute = (req, res, next) => {
   const { city, title, hourly_rate_max, hourly_rate_min, description } = req.body;
 
   // Initial portion of query
-  let sqlQuery = `SELECT * FROM gigs`;
+  let sqlQuery = `SELECT * FROM gigs WHERE _id NOT IN (SELECT job_id FROM user_job_assigned_to_join) `;
 
   let conditions = '';
-  if (city !== undefined) conditions += `city ILIKE '%${city}%'`;
+  if (city !== undefined) conditions += conditions === '' ? `city ILIKE '%${city}%'` : ` AND city ILIKE '%${city}%'`;
   if (title !== undefined) conditions += conditions === '' ? `title ILIKE '%${title}%'` : ` AND title ILIKE '%${title}%'`;
   if (hourly_rate_min !== undefined) conditions += conditions === '' ? `hourly_rate >= ${hourly_rate_min}` : ` AND hourly_rate >= ${hourly_rate_min}`;
   if (hourly_rate_max !== undefined) conditions += conditions === '' ? `hourly_rate <= ${hourly_rate_max}` : ` AND hourly_rate <= ${hourly_rate_max}`;
@@ -203,7 +203,7 @@ controller.addGig = (req, res, next) => {
 controller.checkGig = (req, res, next) => {
   const { job_id } = req.body
   const sqlQuery = `SELECT * FROM user_job_assigned_to_join WHERE job_id='${job_id}'`;
-  
+  console.log(sqlQuery);
 
   pool.query(sqlQuery)
   .then(payload=>{
